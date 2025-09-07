@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Education App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f5ff;
+      text-align: center;
+      padding: 40px;
+    }
+    h2 { color: #333; }
+    .page { display: none; }
+    ul { list-style: none; padding: 0; }
+    ul li { margin: 10px 0; }
+    a, button {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: #fff;
+      background: #4a90e2;
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    a:hover, button:hover { background: #357ac9; }
+    .login-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    table {
+      border-collapse: collapse;
+      margin: auto;
+    }
+    table, th, td {
+      border: 1px solid #444;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div id="login" class="page" style="display:block;">
+    <div class="login-box">
+      <h2>Smart Education App</h2>
+      <form>
+        <label for="role">Login as:</label>
+        <select id="role">
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="parent">Parent</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="button" onclick="goToDashboard()">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Student Page -->
+  <div id="student" class="page">
+    <h2>Welcome, Student</h2>
+    <ul>
+      <li><a href="#" onclick="showPage('syllabus')">Check Syllabus Progress</a></li>
+      <li><a href="#">View Attendance (coming soon)</a></li>
+      <li><a href="#">Assignments & Activities</a></li>
+    </ul>
+    <button onclick="showPage('login')">Logout</button>
+  </div>
+
+  <!-- Teacher Page -->
+  <div id="teacher" class="page">
+    <h2>Welcome, Teacher</h2>
+    <ul>
+      <li><a href="#" onclick="showPage('attendance')">Mark Attendance</a></li>
+      <li><a href="#">Upload Lessons / Notes</a></li>
+      <li><a href="#">Assignments</a></li>
+    </ul>
+    <button onclick="showPage('login')">Logout</button>
+  </div>
+
+  <!-- Parent Page -->
+  <div id="parent" class="page">
+    <h2>Welcome, Parent</h2>
+    <ul>
+      <li><a href="#">Child Attendance</a></li>
+      <li><a href="#">Progress Reports</a></li>
+      <li><a href="#">Upcoming Events</a></li>
+    </ul>
+    <button onclick="showPage('login')">Logout</button>
+  </div>
+
+  <!-- Admin Page -->
+  <div id="admin" class="page">
+    <h2>Welcome, Admin</h2>
+    <ul>
+      <li><a href="#" onclick="showReports()">View Reports</a></li>
+      <li><a href="#">Manage Teachers</a></li>
+      <li><a href="#">Announcements</a></li>
+    </ul>
+    <button onclick="showPage('login')">Logout</button>
+  </div>
+
+  <!-- Attendance Page -->
+  <div id="attendance" class="page">
+    <h2>Mark Attendance</h2>
+    <form id="attendanceForm">
+      <table>
+        <tr><th>Student Name</th><th>Present</th><th>Absent</th></tr>
+        <tr><td>Student 1</td><td><input type="radio" name="s1" value="Present"></td><td><input type="radio" name="s1" value="Absent"></td></tr>
+        <tr><td>Student 2</td><td><input type="radio" name="s2" value="Present"></td><td><input type="radio" name="s2" value="Absent"></td></tr>
+        <tr><td>Student 3</td><td><input type="radio" name="s3" value="Present"></td><td><input type="radio" name="s3" value="Absent"></td></tr>
+      </table>
+      <br>
+      <button type="button" onclick="submitAttendance()">Submit</button>
+    </form>
+    <br>
+    <button onclick="showPage('teacher')">Back</button>
+  </div>
+
+  <!-- Reports Page -->
+  <div id="reports" class="page">
+    <h2>Overall Reports</h2>
+    <table id="reportTable">
+      <tr><th>Student Name</th><th>Attendance</th><th>Syllabus Completed</th><th>Remarks</th></tr>
+      <tr><td>Student 1</td><td id="r1">-</td><td>80%</td><td>Good</td></tr>
+      <tr><td>Student 2</td><td id="r2">-</td><td>70%</td><td>Needs Improvement</td></tr>
+      <tr><td>Student 3</td><td id="r3">-</td><td>85%</td><td>Excellent</td></tr>
+    </table>
+    <br>
+    <button onclick="showPage('admin')">Back</button>
+  </div>
+
+  <!-- Syllabus Page -->
+  <div id="syllabus" class="page">
+    <h2>Syllabus Progress</h2>
+    <ul style="list-style:none;">
+      <li><input type="checkbox" checked> Mathematics - 70% Completed</li>
+      <li><input type="checkbox"> Physics - 40% Completed</li>
+      <li><input type="checkbox"> Chemistry - 30% Completed</li>
+      <li><input type="checkbox"> Computer Science - 50% Completed</li>
+    </ul>
+    <br>
+    <button onclick="showPage('student')">Back</button>
+  </div>
+
+  <script>
+    // Store attendance data
+    let attendanceData = { s1: "-", s2: "-", s3: "-" };
+
+    function goToDashboard() {
+      let role = document.getElementById("role").value;
+      showPage(role);
+    }
+
+    function showPage(pageId) {
+      let pages = document.querySelectorAll(".page");
+      pages.forEach(p => p.style.display = "none");
+      document.getElementById(pageId).style.display = "block";
+    }
+
+    function submitAttendance() {
+      let form = document.getElementById("attendanceForm");
+      attendanceData.s1 = form.s1.value || "-";
+      attendanceData.s2 = form.s2.value || "-";
+      attendanceData.s3 = form.s3.value || "-";
+      alert("Attendance Submitted!");
+      showPage('teacher');
+    }
+
+    function showReports() {
+      document.getElementById("r1").innerText = attendanceData.s1;
+      document.getElementById("r2").innerText = attendanceData.s2;
+      document.getElementById("r3").innerText = attendanceData.s3;
+      showPage('reports');
+    }
+  </script>
+</body>
+</html>
